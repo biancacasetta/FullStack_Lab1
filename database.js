@@ -6,7 +6,7 @@ mongoose.connect(process.env.CONNECTION_URL);
 
 // create dishes' collection structure
 const dishesSchema = new mongoose.Schema({
-    name: String,
+    name: {type: String, unique: true},
     ingredients: [String],
     preparation: [String],
     cooking_time: Number,
@@ -14,4 +14,6 @@ const dishesSchema = new mongoose.Schema({
 });
 
 // create collection in database
-export const dishes = mongoose.model("dishes", dishesSchema);
+const dishes = mongoose.model("dishes", dishesSchema);
+
+export { dishesSchema, dishes }; 

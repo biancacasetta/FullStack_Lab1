@@ -1,31 +1,31 @@
-import { dishesSchema } from './database.js';
-import mongoose from 'mongoose';
+import { dishes } from './database.js';
 
-// create collection in database
-const dishes = mongoose.model("dishes", dishesSchema);
-
-function getAllDishes() {
-    return dishes.find();
+async function fetchAllDishes() {
+    return await dishes.find()
+    //.catch(() => console.log("error in model"));
 }
 
-function getDishByName(n) {
+function fetchDishByName(n) {
    return dishes.findOne({name: n});
 }
 
 async function addDish(dish) {
-    const dish = new dishes(dish);
-    await dish.save();
+    const d = new dishes(dish);
+    await d.save()
+    .catch(err => {
+        throw err;
+    });
     console.log("New dish added!");
 }
 
-function updateDish(id, update) {
+function modifyDish(id, update) {
     dishes.findByIdAndUpdate(id, update)
     .then(() => console.log("Updated doc"))
-    .catch(e => console.log(e));
+    .catch(err => {throw err});
 }
 
 function removeDish(id) {
     dishes.findByIdAndDelete(id);
 }
 
-export { getAllDishes, getDishByName, addDish, updateDish, removeDish };
+export { fetchAllDishes, fetchDishByName, addDish, modifyDish, removeDish };
