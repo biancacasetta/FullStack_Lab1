@@ -10,7 +10,7 @@ const app = express();
 app.use((req, res, next) => {
     console.log(req.url);
     next();
-})
+});
 app.use(express.static("./static"));
 app.use(express.json());
 app.use(router);

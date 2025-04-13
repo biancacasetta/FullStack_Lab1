@@ -8,6 +8,7 @@
     <script src="script.js"></script>
 </head>
 <body>
+    
     <table id="table">
         <thead>
             <th>Name</th>
@@ -17,5 +18,69 @@
             <th>Origin</th>
         </thead>
     </table>
+
+    <form id="dish-form">
+        <label>Name
+            <input type="text" name="name">
+        </label>
+        <label>Ingredients
+            <input type="text" name="ingredients">
+        </label>
+        <label>Preparation Steps
+            <textarea form="dish-form" name="preparation"></textarea>
+        </label>
+        <label>Cooking Time
+            <input type="number" name="cooking_time">
+        </label>
+        <label>Origin Country
+            <input type="text" name="origin">
+        </label>
+        
+        <input type="submit">
+    </form>
+
+    <template id="template-row">
+        <tr>
+            <td class="name"></td>
+            <td class="ingredients">
+                <ul></ul>
+            </td>
+            <td class="preparation">
+                <ol></ol>
+            </td>
+            <td class="time"></td>
+            <td class="origin"></td>
+
+            <td class="buttons">
+                <button class="edit-btn">Edit</button>
+                <button class="delete-btn">Delete</button>
+            </td>
+        </tr>
+    </template>
+
+    <template id="template-update-row">
+        <tr>
+            <td class="name">
+                <input type="text">
+            </td>
+            <td class="ingredients">
+                <input type="text">
+            </td>
+            <td class="preparation">
+                <textarea></textarea>
+            </td>
+            <td class="time">
+                <input type="number"> minutes
+            </td>
+            <td class="origin">
+                <input type="text">
+            </td>
+
+            <td class="buttons">
+                <button class="update-btn">Update</button>
+                <button class="cancel-btn">Cancel</button>
+            </td>
+        </tr>
+    </template>
 </body>
 </html>

@@ -1,12 +1,12 @@
 import { fetchAllDishes, fetchDishByName, addDish, modifyDish, removeDish } from './dishesModel.js';
 
-function getAllDishes(req, res, next) {
-    fetchAllDishes().then(data => res.json(data));
+async function getAllDishes(req, res, next) {
+    await fetchAllDishes().then(data => res.json(data));
 }
 
-function getDishByName(req, res, next) {
+async function getDishByName(req, res, next) {
     const name = req.params.name;
-    const d = fetchDishByName(name);
+    const d = await fetchDishByName(name);
 
     if(!d) {
         const err = new Error("Not found");
@@ -32,28 +32,33 @@ async function postDish(req, res, next) {
     });
 }
 
-function updateDish(req, res, next) {
+async function updateDish(req, res, next) {
     const id = req.params.id;
     const update = req.body;
 
-    modifyDish(id, update)
-    .catch(() => {
+    try {
+        await modifyDish(id, update);
+        res.send();
+    } catch {
+        console.log("Dish does not exist");
         const err = new Error("Not found");
         err.status = 404;
-        console.log("Dish does not exist");
         next(err);
-    });
+    }
 }
 
-function deleteDish(req, res, next) {
+async function deleteDish(req, res, next) {
     const id = req.params.id;
-    removeDish(id)
-    .catch(() => {
+    const removed = await removeDish(id);
+
+    if (removed) {
+        res.send();
+    } else {
         const err = new Error("Not found");
         err.status = 404;
         console.log("Dish does not exist");
         next(err);
-    });;
+    }
 }
 
 export { getAllDishes, getDishByName, postDish, updateDish, deleteDish }
