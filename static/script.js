@@ -49,6 +49,19 @@ function populateList(items, listElement) {
     });
 }
 
+function joinListItems(listElement) {
+    const items = listElement.querySelectorAll("li");
+    let joinedString = [];
+    let sep = listElement instanceof HTMLUListElement ? ", " : "\n";
+
+    items.forEach(i => {
+        joinedString.push(i.innerHTML);
+    });
+    joinedString = joinedString.join(sep);
+
+    return joinedString;
+}
+
 async function handleSubmitForm(e) {
     e.preventDefault();
     const form = document.forms[0];
@@ -81,7 +94,6 @@ async function createDish(dish) {
 
 }
 
-
 function handleEditDish(e) {
     const rowId = e.target.parentElement.parentElement.id;
     const row = document.getElementById(rowId);
@@ -89,46 +101,67 @@ function handleEditDish(e) {
     const editRow = editRowTemplate.content.cloneNode(true);
 
     row.setAttribute("hidden", "true");
-
+    populateEditRow(editRow, row);
     
-
-
-    row.parentElement.insertBefore(editRow.querySelector("tr"), row.nextElementSibling);
-    
-    editRow.querySelector(".buttons .update-btn").addEventListener("click", handleEditDish);
+    editRow.querySelector(".buttons .update-btn").addEventListener("click", handleUpdateDish);
     editRow.querySelector(".buttons .cancel-btn").addEventListener("click", handleCancelUpdate);
+    
+    row.parentElement.insertBefore(editRow.querySelector("tr"), row.nextElementSibling);
 }
 
+function populateEditRow(editRow, originalRow) {
+    editRow.querySelector(".name input").value = originalRow.querySelector(".name").innerHTML;
+    editRow.querySelector(".time input").value = originalRow.querySelector(".time").innerHTML;
+    editRow.querySelector(".origin input").value = originalRow.querySelector(".origin").innerHTML;
 
+    const ingList = originalRow.querySelector(".ingredients ul");
+    editRow.querySelector(".ingredients input").value = joinListItems(ingList);
+    const prepList = originalRow.querySelector(".preparation ol");
+    editRow.querySelector(".preparation textarea").value = joinListItems(prepList);
+}
 
 function handleCancelUpdate(e) {
-    const 
+    const editRow = e.target.parentElement.parentElement;
+    const originalRow = editRow.previousElementSibling;
+    editRow.remove();
+    originalRow.removeAttribute("hidden");
 }
 
+async function handleUpdateDish(e) {
+    const editRow = e.target.parentElement.parentElement;
+    let originalRow = editRow.previousElementSibling;
 
-// function editDish(e) {
-//     const rowId = e.target.parentElement.id;
-//     console.log(rowId);
-    
-//     const row = document.getElementById(rowId);
-//     const columns = row.querySelectorAll("td");
+    const updatedDish = {
+        _id: originalRow.id,
+        name: editRow.querySelector(".name input").value.toLowerCase(),
+        ingredients: editRow.querySelector(".ingredients input").value.toLowerCase().split(/\s*,\s*/),
+        preparation: editRow.querySelector(".preparation textarea").value.toLowerCase().split(/\s*\n\s*/),
+        cooking_time: Number(editRow.querySelector(".time input").value),
+        origin: editRow.querySelector(".origin input").value.toLowerCase()
+    };
 
-//     for (let i = 0; i < columns.length; i++) {
-//         const column = columns[i];
-//         column.setAttribute("contenteditable", "true");
-//     }
+    const res = await updateDish(updatedDish);
 
-//     const buttons = row.querySelectorAll("button");
-//     for (let i = 0; i < buttons.length; i++) {
-//         const b = buttons[i];
+    if (res.status === 200) {
+        const updatedRow = populateRow(updatedDish);
+        originalRow.parentElement.replaceChild(updatedRow, originalRow);
+        dishes[updatedDish._id] = updatedDish;
+        editRow.remove();
+    } else if (res.status === 404) {
+        handleCancelUpdate(e);
+    }
+}
 
-//         if (i > 1) {
-//             b.removeAttribute("hidden");
-//         } else {
-//             b.setAttribute("hidden", "true");
-//         }
-//     }
-// }
+async function updateDish(updatedDish) {
+    return await fetch(`/api/dishes/${updatedDish._id}`, {
+        method: "PUT",
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(updatedDish)
+    });
+}
 
 async function handleDeleteDish(e) {
     const rowId = e.target.parentElement.parentElement.id;
@@ -147,28 +180,6 @@ async function deleteDish(id) {
     });
 }
 
-// function cancelUpdate(e) {
-//     const rowId = e.target.parentElement.id;
-  
-//     const row = document.getElementById(rowId);
-//     const columns = row.querySelectorAll("td");
-
-//     for (let i = 0; i < columns.length; i++) {
-//         const column = columns[i];
-//         column.setAttribute("contenteditable", "false");
-//     }
-
-//     const buttons = row.querySelectorAll("button");
-//     for (let i = 0; i < buttons.length; i++) {
-//         const b = buttons[i];
-
-//         if (i > 1) {
-//             b.setAttribute("hidden", "true");
-//         } else {
-//             b.removeAttribute("hidden");
-//         }
-//     }
-// }
 
 // async function updateRow(e) {
 //     const rowId = e.target.parentElement.id;
