@@ -21,8 +21,8 @@ async function getDishByName(req, res, next) {
 async function postDish(req, res, next) {
     const dish = req.body;
     addDish(dish)
-    .then(() => {
-        res.status(201).send();
+    .then(d => {
+        res.status(201).json(d);
     })
     .catch(() => {
         const err = new Error("Conflict");
@@ -48,12 +48,12 @@ async function updateDish(req, res, next) {
 }
 
 async function deleteDish(req, res, next) {
-    const id = req.params.id;
-    const removed = await removeDish(id);
+    const id = req.params.id; 
 
-    if (removed) {
+    try {
+        await removeDish(id);
         res.send();
-    } else {
+    } catch {
         const err = new Error("Not found");
         err.status = 404;
         console.log("Dish does not exist");

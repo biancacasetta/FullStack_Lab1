@@ -10,12 +10,10 @@ async function fetchDishByName(n) {
 
 async function addDish(dish) {
     const d = new dishes(dish);
-    console.log(d);
-    await d.save()
+    return await d.save()
     .catch(err => {
         throw err;
     });
-    console.log("New dish added!");
 }
 
 async function modifyDish(id, update) {
@@ -26,7 +24,10 @@ async function modifyDish(id, update) {
 }
 
 async function removeDish(id) {
-    return await dishes.findByIdAndDelete(id);
+    return await dishes.findByIdAndDelete(id)
+    .catch(err => {
+        throw err;
+    });
 }
 
 export { fetchAllDishes, fetchDishByName, addDish, modifyDish, removeDish };

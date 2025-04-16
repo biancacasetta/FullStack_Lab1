@@ -6,6 +6,10 @@ async function addAllListeners() {
     populateTable(await getDishes());
     const form = document.getElementById("dish-form");
     form.addEventListener("submit", handleSubmitForm);
+
+    const popup = document.getElementById("popup");
+    popup.querySelector("#popup-delete").addEventListener("click", handlePopupDelete);
+    popup.querySelector("#popup-cancel").addEventListener("click", () => popup.close());
 }
 
 function getDishes() {
@@ -75,10 +79,11 @@ async function handleSubmitForm(e) {
     newDish["ingredients"] = newDish["ingredients"].split(/\s*,\s*/);
     newDish["preparation"] = newDish["preparation"].split(/\s*\n\s*/);
     const res = await createDish(newDish);
+    const body = await res.json();
 
     if (res.status === 201) {
         form.reset();
-        populateTable([newDish]);
+        populateTable([body]);
     }
 }
 
@@ -164,7 +169,19 @@ async function updateDish(updatedDish) {
 }
 
 async function handleDeleteDish(e) {
+    const popup = document.querySelector("dialog");
     const rowId = e.target.parentElement.parentElement.id;
+    popup.setAttribute("rowId", rowId);
+    console.log(e.target.parentElement.parentElement.id);
+    const dishName = dishes[rowId].name;
+    const p = document.getElementById("dish-to-remove");
+    p.innerHTML = `Delete ${dishName}?`;
+    popup.showModal();
+}
+
+async function handlePopupDelete(e) {
+    const popup = e.target.parentElement;
+    const rowId = popup.getAttribute("rowId");
     const res = await deleteDish(rowId);
 
     if (res.status == 200) {
@@ -172,6 +189,7 @@ async function handleDeleteDish(e) {
         row.remove();
         delete dishes[rowId];
     }
+    popup.close();
 }
 
 async function deleteDish(id) {
@@ -179,33 +197,3 @@ async function deleteDish(id) {
         method: "DELETE"
     });
 }
-
-
-// async function updateRow(e) {
-//     const rowId = e.target.parentElement.id;
-  
-//     const row = document.getElementById(rowId);
-//     const columns = row.querySelectorAll("td");
-
-//     const updatedRow = {
-//         name: columns[0].innerHTML,
-//         ingredients: columns[1].innerHTML.split(','),
-//         preparation: columns[2].innerHTML.split(','),
-//         cooking_time: Number(columns[3].innerHTML),
-//         origin: columns[4].innerHTML
-//     };
-
-//     const res = await fetch(`/api/dishes/${rowId}`, {
-//         method: "PUT",
-//         headers: {
-//             'Accept': 'application/json',
-//             'ContentType': 'application/json'
-//         },
-//         body: JSON.stringify(updatedRow)
-//     });
-
-//     if(res.status == 404) {
-//         cancelUpdate(e);
-//     }
-
-// }
