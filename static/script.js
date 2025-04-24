@@ -107,6 +107,7 @@ function handleEditDish(e) {
 
     row.setAttribute("hidden", "true");
     populateEditRow(editRow, row);
+    editRow.querySelector("tr").style.backgroundColor = "rgba(255, 69, 0, 0.4)";
     
     editRow.querySelector(".buttons .update-btn").addEventListener("click", handleUpdateDish);
     editRow.querySelector(".buttons .cancel-btn").addEventListener("click", handleCancelUpdate);

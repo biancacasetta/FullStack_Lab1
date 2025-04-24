@@ -3,41 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lab1</title>
+    <title>Lab 1 - FullStack</title>
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
 </head>
 <body>
-    
-    <table id="table">
-        <thead>
-            <th>Name</th>
-            <th>Ingredients</th>
-            <th>Preparation Steps</th>
-            <th>Cooking Time</th>
-            <th>Origin</th>
-        </thead>
-    </table>
 
-    <form id="dish-form">
-        <label>Name
-            <input type="text" name="name">
-        </label>
-        <label>Ingredients
-            <input type="text" name="ingredients">
-        </label>
-        <label>Preparation Steps
-            <textarea form="dish-form" name="preparation"></textarea>
-        </label>
-        <label>Cooking Time
-            <input type="number" name="cooking_time">
-        </label>
-        <label>Origin Country
-            <input type="text" name="origin">
-        </label>
-        
-        <input type="submit">
-    </form>
+    <section>
+        <h2>Table of Dishes</h2>
+        <table id="table">
+            <thead>
+                <th>Name</th>
+                <th>Ingredients</th>
+                <th>Preparation Steps</th>
+                <th>Cooking Time<br>(minutes)</th>
+                <th>Origin</th>
+                <th>Actions</th>
+            </thead>
+        </table>
+    </section>
+
+    <section>
+        <h2>Add a Dish</h2>
+        <form id="dish-form">
+            <label>Name
+                <input type="text" name="name">
+            </label>
+            <label>
+                <div class="cell">
+                    Ingredients
+                    <div class="tooltip">
+                        <img src="./images/question-mark.png" alt="Question Mark">
+                        <span class="tooltiptext">Insert multiple ingredients by separating each with a comma (,)</span>
+                    </div>
+                </div>
+                <input type="text" name="ingredients">
+            </label>
+            <label>
+                <div class="cell">
+                    Preparation Steps
+                    <span class="tooltip">
+                        <img src="./images/question-mark.png" alt="Question Mark">
+                        <span class="tooltiptext">Insert multiple steps by separating each with a new line (Press Enter)</span>
+                    </span>
+                </div>
+                <textarea form="dish-form" name="preparation"></textarea>
+            </label>
+            <label>Cooking Time (minutes)
+                <input type="number" name="cooking_time">
+            </label>
+            <label>Origin Country
+                <input type="text" name="origin">
+            </label>
+            
+            <input type="submit">
+        </form>
+    </section>
 
     <template id="template-row">
         <tr>
@@ -64,15 +85,25 @@
                 <input type="text">
             </td>
             <td class="ingredients">
-                Separate with commas
-                <input type="text">
+                <div class="cell">
+                    <input type="text">
+                    <div class="tooltip">
+                        <img src="./images/question-mark.png" alt="Question Mark">
+                        <span class="tooltiptext">Insert multiple ingredients by separating each with a comma (,)</span>
+                    </div>
+                </div>
             </td>
             <td class="preparation">
-                Separate with new line
-                <textarea></textarea>
+                <div class="cell">
+                    <textarea></textarea>
+                    <div class="tooltip">
+                        <img src="./images/question-mark.png" alt="Question Mark">
+                        <span class="tooltiptext">Insert multiple steps by separating each with a new line (Press Enter)</span>
+                    </div>
+                </div>
             </td>
             <td class="time">
-                <input type="number"> minutes
+                <input type="number">
             </td>
             <td class="origin">
                 <input type="text">
