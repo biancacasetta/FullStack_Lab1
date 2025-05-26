@@ -12,18 +12,27 @@ async function addAllListeners() {
     popup.querySelector("#popup-cancel").addEventListener("click", () => popup.close());
 }
 
-function getDishes() {
-    return fetch(`/api/dishes`)
+async function getDishes() {
+    return await fetch('/api/dishes')
         .then(res => res.json())
         .catch(error => console.error("Fetching dishes unsuccessful: " + error));
 }
 
-async function populateTable(dishesData) {
-    dishesData.forEach(dish => {
-        dishes[dish._id] = dish;
-        const dishRow = populateRow(dish);
-        table.appendChild(dishRow);
-    });
+function populateTable(dishesData) {
+    const table = document.getElementById("table");
+    const p = document.getElementById("empty");
+    if (dishesData.length  == 0) {
+        table.setAttribute("hidden", "true");
+        p.removeAttribute("hidden");
+    } else {
+        table.removeAttribute("hidden");
+        p.setAttribute("hidden", "true");
+        dishesData.forEach(dish => {
+            dishes[dish._id] = dish;
+            const dishRow = populateRow(dish);
+            table.appendChild(dishRow);
+        });
+    }
 }
 
 function populateRow(dish) {
@@ -34,6 +43,7 @@ function populateRow(dish) {
     row.querySelector(".name").innerHTML = dish.name;
     row.querySelector(".time").innerHTML = dish.cooking_time;
     row.querySelector(".origin").innerHTML = dish.origin;
+    row.querySelector(".calories").innerHTML = dish.calories;
 
     const ingList = row.querySelector(".ingredients ul");
     populateList(dish.ingredients, ingList);
@@ -119,6 +129,7 @@ function populateEditRow(editRow, originalRow) {
     editRow.querySelector(".name input").value = originalRow.querySelector(".name").innerHTML;
     editRow.querySelector(".time input").value = originalRow.querySelector(".time").innerHTML;
     editRow.querySelector(".origin input").value = originalRow.querySelector(".origin").innerHTML;
+    editRow.querySelector(".calories input").value = originalRow.querySelector(".calories").innerHTML;
 
     const ingList = originalRow.querySelector(".ingredients ul");
     editRow.querySelector(".ingredients input").value = joinListItems(ingList);
@@ -143,7 +154,8 @@ async function handleUpdateDish(e) {
         ingredients: editRow.querySelector(".ingredients input").value.toLowerCase().split(/\s*,\s*/),
         preparation: editRow.querySelector(".preparation textarea").value.toLowerCase().split(/\s*\n\s*/),
         cooking_time: Number(editRow.querySelector(".time input").value),
-        origin: editRow.querySelector(".origin input").value.toLowerCase()
+        origin: editRow.querySelector(".origin input").value.toLowerCase(),
+        calories: Number(editRow.querySelector(".calories input").value)
     };
 
     const res = await updateDish(updatedDish);

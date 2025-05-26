@@ -22,6 +22,11 @@ h2 {
     text-align: center;
 }
 
+#table + p {
+    text-align: center;
+    margin-top: 5vh;
+}
+
 /* Table */
 
 #table {
@@ -56,7 +61,7 @@ ul, ol {
     text-transform: capitalize;
 }
 
-.time {
+.time, .calories {
     text-align: center;
 }
 

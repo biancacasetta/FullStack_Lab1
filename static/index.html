@@ -18,9 +18,11 @@
                 <th>Preparation Steps</th>
                 <th>Cooking Time<br>(minutes)</th>
                 <th>Origin</th>
+                <th>Calories per Serving</th>
                 <th>Actions</th>
             </thead>
         </table>
+        <p id="empty" hidden>No dishes to display.</p>
     </section>
 
     <section>
@@ -55,6 +57,9 @@
             <label>Origin Country
                 <input type="text" name="origin">
             </label>
+            <label>Calories (per serving)
+                <input type="number" name="calories">
+            </label>
             
             <input type="submit">
         </form>
@@ -71,6 +76,7 @@
             </td>
             <td class="time"></td>
             <td class="origin"></td>
+            <td class="calories"></td>
 
             <td class="buttons">
                 <button class="edit-btn">Edit</button>
@@ -107,6 +113,9 @@
             </td>
             <td class="origin">
                 <input type="text">
+            </td>
+            <td class="calories">
+                <input type="number">
             </td>
 
             <td class="buttons">

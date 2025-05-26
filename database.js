@@ -27,6 +27,10 @@ const dishesSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    calories: {
+        type: Number,
+        required: true
+    }
 });
 
 // create collection in database
